@@ -22,6 +22,7 @@ import {
 } from "../dropdown-menu";
 
 export const HeaderActions = () => {
+  console.log("HeaderActions rendered");
   return (
     <div className="flex items-center space-x-1">
       <TooltipProvider>
