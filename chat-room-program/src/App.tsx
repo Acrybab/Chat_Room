@@ -1,20 +1,9 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Home } from "./pages/Home";
-import { Room } from "./pages/Room";
-import { NotFound } from "./pages/NotFound";
+import { RouterProvider } from "react-router-dom";
+
+import { router } from "./routes";
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        {/* Route cơ bản */}
-        <Route path="/" element={<Home />} />
-        <Route path="/room/:roomId" element={<Room />} />
-        {/* Route không khớp */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
