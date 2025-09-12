@@ -5,24 +5,22 @@ import {
   TooltipTrigger,
 } from "../tooltip";
 import { Button } from "../button";
-import {
-  MoreVertical,
-  Phone,
-  Search,
-  Settings,
-  UserPlus,
-  Video,
-} from "lucide-react";
+import { MoreVertical, Search, Settings, UserPlus } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../dropdown-menu";
+} from "../dropdown-menu"; // import { VideoCall } from "./VideoCall";
 
-export const HeaderActions = () => {
-  console.log("HeaderActions rendered");
+interface HeaderActionsProps {
+  userId: number | undefined;
+  roomId: string | undefined;
+}
+
+export const HeaderActions = ({ userId, roomId }: HeaderActionsProps) => {
+  console.log(userId, roomId, "header actions props");
   return (
     <div className="flex items-center space-x-1">
       <TooltipProvider>
@@ -37,18 +35,14 @@ export const HeaderActions = () => {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Phone className="h-4 w-4" />
-            </Button>
+            {/* <VideoCall userId={userId} roomId={roomId} /> */}
           </TooltipTrigger>
           <TooltipContent>Start voice call</TooltipContent>
         </Tooltip>
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Video className="h-4 w-4" />
-            </Button>
+            {/* <VideoCall userId={Number(userId)} roomId={Number(roomId)} /> */}
           </TooltipTrigger>
           <TooltipContent>Start video call</TooltipContent>
         </Tooltip>

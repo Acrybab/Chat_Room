@@ -8,21 +8,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { chatRooms } from "@/data/dummyChatRooms";
+import { useChatRoomList } from "@/hooks/useChatRoomList";
 import { ArrowRight, Clock, Hash, Users } from "lucide-react";
 
 interface ChatRoomListProps {
   getCategoryVariant: (category: string) => "default" | "secondary" | "outline";
-  handleJoinRoom: (roomId: number) => void;
+  handleJoinRoom: (roomId: number, userId: number) => void;
 }
 
 export const ChatRoomList = ({
   getCategoryVariant,
   handleJoinRoom,
 }: ChatRoomListProps) => {
+  const { data, meData } = useChatRoomList();
+  console.log(meData);
+  console.log(data?.data.chatRooms, "sss");
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-      {chatRooms.map((room) => (
+      {data?.data.chatRooms.map((room) => (
         <Card
           key={room.id}
           className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
@@ -30,7 +33,11 @@ export const ChatRoomList = ({
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
               <div className="flex items-center space-x-3">
-                <Avatar className={`${room.color} border-2 border-background`}>
+                <Avatar
+                  className={`${
+                    room.isActive ? "bg-green-500" : "bg-gray-500"
+                  } border-2 border-background`}
+                >
                   <AvatarFallback className="text-white font-bold">
                     <Hash className="w-5 h-5" />
                   </AvatarFallback>
@@ -67,24 +74,33 @@ export const ChatRoomList = ({
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                <span>{room.numberOfUser} users</span>
+                <span>{room.members.length} users</span>
               </div>
               <div className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
-                <span>{room.lastActive}</span>
+                <span>
+                  {new Date(room.updatedAt).toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </span>
               </div>
             </div>
 
             {/* Last Message */}
             <div className="bg-muted/50 rounded-lg p-3 border">
               <p className="text-sm text-muted-foreground line-clamp-2">
-                💬 {room.lastMessage}
+                {/* 💬{" "}
+                {room.messages.length > 0
+                  ? room.messages[room.messages.length - 1].content
+                  : "No messages yet"} */}
               </p>
             </div>
 
             {/* Join Button */}
             <Button
-              onClick={() => handleJoinRoom(room.id)}
+              onClick={() => handleJoinRoom(room.id, meData!.data.user.id)}
               className="w-full gap-2 group/btn"
               variant={room.isActive ? "default" : "outline"}
             >

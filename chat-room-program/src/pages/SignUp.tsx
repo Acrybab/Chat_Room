@@ -3,12 +3,10 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { MessageCircle } from "lucide-react";
 import { useSignUpStore } from "@/store/signUp.store";
-import { SignUpForm } from "@/components/ui/SignUp/SignUpForm";
+import { SignUpForm } from "@/features/sign-up/SignUpForm";
 export interface SignUpFormValues {
-  userName: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
 export const SignUp = () => {
