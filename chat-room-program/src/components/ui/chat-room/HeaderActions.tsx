@@ -12,9 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../dropdown-menu";
-import VideoCall from "./VideoCall";
-// import { VideoCall } from "./VideoCall";
+} from "../dropdown-menu"; // import { VideoCall } from "./VideoCall";
 
 interface HeaderActionsProps {
   userId: number | undefined;
@@ -22,6 +20,7 @@ interface HeaderActionsProps {
 }
 
 export const HeaderActions = ({ userId, roomId }: HeaderActionsProps) => {
+  console.log(userId, roomId, "header actions props");
   return (
     <div className="flex items-center space-x-1">
       <TooltipProvider>
