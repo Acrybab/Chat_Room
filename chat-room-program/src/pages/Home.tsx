@@ -10,7 +10,7 @@ import {
 import { HeaderSection } from "@/components/ui/home-page/HeaderSection";
 import { StatsCards } from "@/components/ui/home-page/StatsCards";
 import { Input } from "@/components/ui/input";
-import { ChatRoomList } from "@/features/chat/ChatRoomList";
+import { ChatRoomList } from "../features/chat/ChatRoomList";
 import { useHomePage } from "@/hooks/useHomePage";
 import { Plus } from "lucide-react";
 
