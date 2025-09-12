@@ -5,7 +5,6 @@ import { Room } from "@/pages/Room";
 import { SignIn } from "@/pages/Sign-In";
 import { SignUp } from "@/pages/SignUp";
 import { createBrowserRouter } from "react-router-dom";
-
 export const router = createBrowserRouter([
   {
     path: "/",

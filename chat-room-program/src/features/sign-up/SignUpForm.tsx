@@ -1,17 +1,27 @@
+import type { UseFormReturn } from "react-hook-form";
+import type { SignUpFormValues } from "@/pages/SignUp";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../card";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../form";
-import { Eye, EyeOff, Lock, Mail, UserPlus } from "lucide-react";
-import { Input } from "../input";
-import { Button } from "../button";
-import { Separator } from "../separator";
-import type { UseFormReturn } from "react-hook-form";
-import type { SignUpFormValues } from "@/pages/SignUp";
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { setToken } from "@/lib/cookies";
 
 interface SignUpFormProps {
   signUpForm: UseFormReturn<SignUpFormValues, unknown, SignUpFormValues>;
@@ -25,9 +35,28 @@ export const SignUpForm = ({
   signUpForm,
   showPassword,
   setShowPassword,
-  showConfirmPassword,
-  setShowConfirmPassword,
 }: SignUpFormProps) => {
+  const signUpFunction = async (data: SignUpFormValues) => {
+    const response = await axios.post(
+      "http://localhost:3000/auth/signup",
+      data
+    );
+    return response.data;
+  };
+  const navigate = useNavigate();
+  const { mutate: SignUp } = useMutation({
+    mutationFn: signUpFunction,
+    onSuccess: (data) => {
+      console.log("User signed up successfully:", data.data.user.id);
+      signUpForm.reset();
+      setToken(data.data.accessToken);
+      navigate("/");
+    },
+    onError: (error) => {
+      console.error("Error signing up:", error);
+    },
+  });
+
   return (
     <Card>
       <CardHeader className="space-y-1">
@@ -37,35 +66,11 @@ export const SignUpForm = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-4">
+        <form
+          onSubmit={signUpForm.handleSubmit((data) => SignUp(data))}
+          className="space-y-4"
+        >
           <Form {...signUpForm}>
-            {/* Username Field */}
-            <FormField
-              control={signUpForm.control}
-              name="userName"
-              render={() => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium">
-                    User Name
-                  </FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <UserPlus className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Enter your username"
-                        className="pl-10"
-                        onChange={(e) => {
-                          signUpForm.setValue("userName", e.target.value);
-                        }}
-                        value={signUpForm.getValues("userName") || ""}
-                      />
-                    </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            {/* Email Field */}
             <FormField
               control={signUpForm.control}
               name="email"
@@ -90,7 +95,6 @@ export const SignUpForm = ({
               )}
             />
 
-            {/* Password Field */}
             <FormField
               control={signUpForm.control}
               name="password"
@@ -129,51 +133,6 @@ export const SignUpForm = ({
                 </FormItem>
               )}
             />
-
-            {/* Confirm Password Field */}
-            <FormField
-              control={signUpForm.control}
-              name="confirmPassword"
-              render={() => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium">
-                    Confirm Password
-                  </FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Confirm your password"
-                        className="pl-10 pr-10"
-                        onChange={(e) => {
-                          signUpForm.setValue(
-                            "confirmPassword",
-                            e.target.value
-                          );
-                        }}
-                        value={signUpForm.getValues("confirmPassword") || ""}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() =>
-                          setShowConfirmPassword(!showConfirmPassword)
-                        }
-                      >
-                        {showConfirmPassword ? (
-                          <EyeOff className="h-4 w-4 text-muted-foreground" />
-                        ) : (
-                          <Eye className="h-4 w-4 text-muted-foreground" />
-                        )}
-                      </Button>
-                    </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
           </Form>
 
           {/* Submit Button */}
@@ -200,7 +159,13 @@ export const SignUpForm = ({
 
         {/* Social Login Options */}
         <div className="grid grid-cols-2 gap-3 mt-6">
-          <Button variant="outline" className="h-11">
+          <Button
+            onClick={() => {
+              window.location.href = "http://localhost:3000/auth/google/login";
+            }}
+            variant="outline"
+            className="h-11"
+          >
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
               <path
                 fill="currentColor"

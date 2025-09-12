@@ -12,17 +12,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import { useRoomStore } from "@/store/room.store";
 import { useChatRoom } from "@/hooks/useChatRoom";
-import { HeaderActions } from "@/components/ui/ChatRoom/HeaderActions";
-import { MessageArea } from "@/components/ui/ChatRoom/MessageArea";
-import { MessageInput } from "@/components/ui/ChatRoom/MessageInput";
-import { MemberSlide } from "@/components/ui/ChatRoom/MemberSlide";
+import { HeaderActions } from "@/components/ui/chat-room/HeaderActions";
+import { MessageArea } from "@/components/ui/chat-room/MessageArea";
+import { MessageInput } from "@/components/ui/chat-room/MessageInput";
+import { MemberSlide } from "@/components/ui/chat-room/MemberSlide";
 
 export const Room = () => {
   const { roomId } = useParams();
 
-  const { message, setMessage, messages, setMessages, onlineUsers, isTyping } =
-    useRoomStore();
-  console.log(onlineUsers);
+  const { message, setMessage, onlineUsers, isTyping } = useRoomStore();
 
   const {
     messagesEndRef,
@@ -33,13 +31,14 @@ export const Room = () => {
     getStatusColor,
     formatTimestamp,
     getInitials,
+    userData,
+    allMessages,
   } = useChatRoom({
     message,
     setMessage,
-    messages,
-    setMessages,
     roomId,
   });
+  console.log(allMessages, "messages in room");
   return (
     <div className="flex h-screen bg-background">
       <div className="flex-1 flex flex-col min-w-0">
@@ -66,19 +65,24 @@ export const Room = () => {
                   </div>
                 </div>
               </div>
-              <HeaderActions />
+              <HeaderActions userId={userData?.data.user.id} roomId={roomId} />
             </div>
           </CardHeader>
         </Card>
         <MessageArea
-          messages={messages}
+          userId={userData?.data.user.id}
+          // messagesData={messagesData}
           formatTimestamp={formatTimestamp}
           getInitials={getInitials}
           messagesEndRef={messagesEndRef}
           isTyping={isTyping}
+          // messages={messages}
+          allMessages={allMessages}
         />
 
         <MessageInput
+          userData={userData}
+          roomId={roomId}
           message={message}
           setMessage={setMessage}
           inputRef={inputRef}

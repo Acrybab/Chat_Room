@@ -2,8 +2,8 @@ import { Button } from "../button";
 import { Card, CardContent } from "../card";
 
 interface FooterProps {
-  handleCreateRoom: () => void;
-  handleJoinRoom: (roomId: number) => void;
+  handleCreateRoom: (roomName: string, description: string) => void;
+  handleJoinRoom: (roomId: number, userId: number) => void;
 }
 export const Footer = ({ handleCreateRoom, handleJoinRoom }: FooterProps) => {
   return (
@@ -17,13 +17,16 @@ export const Footer = ({ handleCreateRoom, handleJoinRoom }: FooterProps) => {
               our vibrant community.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button size="lg" onClick={handleCreateRoom}>
+              <Button
+                size="lg"
+                onClick={() => handleCreateRoom("New Room", "Room Description")}
+              >
                 Create Your Own Room
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                onClick={() => handleJoinRoom(1)}
+                onClick={() => handleJoinRoom(1, 11)}
               >
                 Join General Chat
               </Button>
